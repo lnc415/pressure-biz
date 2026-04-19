@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-navy: #0C1A2E;
+  --color-sky: #38BDF8;
+  --color-aqua: #00E5FF;
+  --color-white: #FFFFFF;
+  --color-gray: #64748B;
+}
+
+body {
+  background: #ffffff;
+  color: #0C1A2E;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Water ripple on buttons */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.3) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.btn-ripple:hover::after {
+  opacity: 1;
+}
+
+/* Nav drip underline */
+.nav-drip {
+  position: relative;
+}
+.nav-drip::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #00E5FF;
+  border-radius: 9999px;
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+.nav-drip:hover::after {
+  width: 100%;
+}
