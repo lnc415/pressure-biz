@@ -7,168 +7,172 @@ interface SplashIntroProps {
   brandName: string
 }
 
-// Tip colors for multi-color spray
-const TIP_COLORS = [
-  'rgba(232, 35, 26, 0.85)',   // red
-  'rgba(255, 209, 0, 0.85)',   // yellow
-  'rgba(0, 165, 80, 0.85)',    // green
-  'rgba(216, 232, 240, 0.85)', // white
-  'rgba(0, 212, 255, 0.9)',    // water/cyan (dominant)
-  'rgba(0, 212, 255, 0.75)',
-  'rgba(0, 212, 255, 0.6)',
+const COLORS: [number, number, number][] = [
+  [255, 255, 255],  // white
+  [220, 245, 255],  // icy white-blue
+  [180, 230, 255],  // light sky
+  [100, 215, 255],  // soft cyan
+  [0,   200, 248],  // water
+  [0,   212, 255],  // brand cyan
 ]
 
-class Particle {
+class Drop {
   x: number; y: number
   vx: number; vy: number
   life: number; maxLife: number
-  size: number; color: string
+  w: number
+  r: number; g: number; b: number
 
-  constructor(ox: number, oy: number, angle: number, spread: number) {
-    const a = angle + (Math.random() - 0.5) * spread
-    const speed = 10 + Math.random() * 18
+  constructor(ox: number, oy: number) {
+    // Speed calibrated so drops are visible ACROSS the full screen:
+    // at 1600px wide, we want drops to take ~100 frames to cross → speed ≈ 18–28
+    const speed  = 16 + Math.random() * 16       // 16–32 px/frame
+    const spread = 40                              // 40° total cone
+    const half   = (spread * Math.PI) / 180 / 2
+    const angle  = Math.PI - half + Math.random() * half * 2  // pointing left
+
     this.x = ox
     this.y = oy
-    this.vx = Math.cos(a) * speed
-    this.vy = Math.sin(a) * speed
-    this.life = 0
-    this.maxLife = 35 + Math.random() * 40
-    this.size = 0.8 + Math.random() * 2.2
-    this.color = TIP_COLORS[Math.floor(Math.random() * TIP_COLORS.length)]
+    this.vx = Math.cos(angle) * speed
+    this.vy = Math.sin(angle) * speed
+
+    // Long life so drops remain visible while crossing the screen
+    this.maxLife = 110 + Math.random() * 70      // 110–180 frames
+    this.life    = 0
+    this.w       = 0.8 + Math.random() * 2.2
+
+    const [r, g, b] = COLORS[Math.floor(Math.random() * COLORS.length)]
+    this.r = r; this.g = g; this.b = b
   }
 
   update() {
-    this.x += this.vx
-    this.y += this.vy
-    this.vy += 0.25
-    this.vx *= 0.97
+    this.x  += this.vx
+    this.y  += this.vy
+    this.vy += 0.18        // gentle gravity — arc downward
+    this.vx *= 0.996       // very low drag — keeps speed through full arc
     this.life++
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const alpha = Math.max(0, 1 - this.life / this.maxLife)
+    const t = this.life / this.maxLife
+    const alpha = t < 0.08
+      ? t / 0.08                                   // quick fade in
+      : 1 - Math.pow((t - 0.08) / 0.92, 1.8)      // gentle fade out
+
+    if (alpha <= 0.01) return
+
+    const speed   = Math.hypot(this.vx, this.vy)
+    const tailLen = Math.min(speed * 1.5, 30)
+
     ctx.save()
-    ctx.globalAlpha = alpha
+    ctx.globalAlpha = alpha * 0.75
     ctx.beginPath()
-    // Draw a short line instead of dot for more spray-like feel
     ctx.moveTo(this.x, this.y)
-    ctx.lineTo(this.x - this.vx * 0.5, this.y - this.vy * 0.5)
-    ctx.strokeStyle = this.color
-    ctx.lineWidth = this.size
-    ctx.lineCap = 'round'
+    ctx.lineTo(
+      this.x - (this.vx / speed) * tailLen,
+      this.y - (this.vy / speed) * tailLen,
+    )
+    ctx.strokeStyle = `rgb(${this.r},${this.g},${this.b})`
+    ctx.lineWidth   = this.w
+    ctx.lineCap     = 'round'
     ctx.stroke()
     ctx.restore()
   }
 
-  isDead() { return this.life >= this.maxLife }
+  isDead(H: number) {
+    return this.life >= this.maxLife || this.y > H + 100
+  }
 }
 
 export default function SplashIntro({ brandName }: SplashIntroProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const logoRef = useRef<HTMLDivElement>(null)
-  const skipRef = useRef<HTMLParagraphElement>(null)
+  const canvasRef  = useRef<HTMLCanvasElement>(null)
+  const logoRef    = useRef<HTMLDivElement>(null)
+  const skipRef    = useRef<HTMLParagraphElement>(null)
   const [visible, setVisible] = useState(false)
-  const animRef = useRef<number>(0)
-  const particles = useRef<Particle[]>([])
+  const animId   = useRef<number>(0)
+  const drops    = useRef<Drop[]>([])
   const emitting = useRef(true)
 
-  useEffect(() => {
-    if (sessionStorage.getItem('splash_seen')) return
-    sessionStorage.setItem('splash_seen', '1')
-    setVisible(true)
-  }, [])
+  // Every visit — no sessionStorage gate
+  useEffect(() => { setVisible(true) }, [])
 
   useEffect(() => {
     if (!visible) return
 
-    const canvas = canvasRef.current!
-    const ctx = canvas.getContext('2d')!
+    const canvas  = canvasRef.current!
+    const ctx     = canvas.getContext('2d')!
     const overlay = overlayRef.current!
-    const logo = logoRef.current!
 
     const resize = () => {
-      canvas.width = window.innerWidth
+      canvas.width  = window.innerWidth
       canvas.height = window.innerHeight
     }
     resize()
     window.addEventListener('resize', resize)
 
-    // Nozzle origin: right side, center height — pointing left
-    const getOrigin = () => ({
-      x: canvas.width + 20,
-      y: canvas.height * 0.5,
-    })
-    const ANGLE = Math.PI        // pointing left
-    const SPREAD = Math.PI / 6  // 30° cone
-
-    // Phase 1: spray for 1.4s, then logo fades in
-    // Phase 2: logo hold 0.6s
-    // Phase 3: big blast wipe right-to-left
+    // Nozzle: right edge, 40% down from top
+    const ox = () => canvas.width + 8
+    const oy = () => canvas.height * 0.40
 
     const tl = gsap.timeline({ onComplete: () => setVisible(false) })
 
-    // Logo appears at 0.8s
-    tl.fromTo(logo,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-      0.8
-    )
-
-    // Skip hint fades in
-    tl.fromTo(skipRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.4 },
+    // Logo appears at 1.2s (spray is filling the screen by then)
+    tl.fromTo(logoRef.current,
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' },
       1.2
     )
-
-    // Phase 3: wipe overlay away (clip-path from right)
-    tl.to(overlay,
-      {
-        clipPath: 'inset(0 0 0 110%)',
-        duration: 0.65,
-        ease: 'power3.inOut',
-        onStart: () => { emitting.current = false },
-      },
-      2.2
+    tl.fromTo(skipRef.current,
+      { opacity: 0 }, { opacity: 1, duration: 0.4 },
+      1.8
     )
 
-    // Canvas spray loop
+    // 3.0s: overlay blasts off to the left
+    tl.to(overlay, {
+      xPercent: -110,
+      duration: 0.55,
+      ease: 'power3.inOut',
+      onStart: () => { emitting.current = false },
+    }, 3.0)
+
     let frame = 0
     const loop = () => {
-      animRef.current = requestAnimationFrame(loop)
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      animId.current = requestAnimationFrame(loop)
+      const W = canvas.width
+      const H = canvas.height
+      ctx.clearRect(0, 0, W, H)
 
-      // Emit new particles while spraying
       if (emitting.current) {
         frame++
-        const batchSize = frame < 20 ? Math.min(frame * 2, 25) : 25
-        const { x, y } = getOrigin()
-        for (let i = 0; i < batchSize; i++) {
-          particles.current.push(new Particle(x, y, ANGLE, SPREAD))
+        const x = ox(), y = oy()
+        // Ramp up hard in first 20 frames so the blast feels instant
+        const ramp  = Math.min(frame / 20, 1)
+        const count = Math.round(ramp * 30)
+        for (let i = 0; i < count; i++) {
+          drops.current.push(new Drop(x, y))
         }
       }
 
-      // Draw & update
-      for (let i = particles.current.length - 1; i >= 0; i--) {
-        const p = particles.current[i]
-        p.update()
-        p.draw(ctx)
-        if (p.isDead()) particles.current.splice(i, 1)
+      for (let i = drops.current.length - 1; i >= 0; i--) {
+        const d = drops.current[i]
+        d.update()
+        d.draw(ctx)
+        if (d.isDead(H)) drops.current.splice(i, 1)
       }
     }
-    animRef.current = requestAnimationFrame(loop)
+    animId.current = requestAnimationFrame(loop)
 
     return () => {
-      cancelAnimationFrame(animRef.current)
+      cancelAnimationFrame(animId.current)
       window.removeEventListener('resize', resize)
     }
   }, [visible])
 
   const skip = () => {
     emitting.current = false
-    gsap.killTweensOf([overlayRef.current, logoRef.current])
-    cancelAnimationFrame(animRef.current)
+    gsap.killTweensOf([overlayRef.current, logoRef.current, skipRef.current])
+    cancelAnimationFrame(animId.current)
     setVisible(false)
   }
 
@@ -178,53 +182,42 @@ export default function SplashIntro({ brandName }: SplashIntroProps) {
     <div
       ref={overlayRef}
       onClick={skip}
-      className="fixed inset-0 z-[9999] bg-[#08111F] flex items-center justify-center cursor-pointer overflow-hidden"
-      style={{ clipPath: 'inset(0 0 0 0%)' }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center cursor-pointer overflow-hidden"
+      style={{ background: 'linear-gradient(160deg,#08111F 0%,#0D1B30 100%)' }}
     >
-      {/* Canvas spray */}
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
-      {/* Logo */}
       <div ref={logoRef} className="relative z-10 text-center select-none" style={{ opacity: 0 }}>
         <div
-          className="font-black tracking-tight mb-3 leading-none"
+          className="font-black tracking-tight leading-none"
           style={{
-            fontSize: 'clamp(3rem, 10vw, 6rem)',
+            fontSize: 'clamp(4rem, 14vw, 8.5rem)',
             color: '#00D4FF',
-            textShadow: '0 0 40px rgba(0,212,255,0.5), 0 0 80px rgba(0,212,255,0.2)',
+            textShadow: '0 0 60px rgba(0,212,255,0.55), 0 0 130px rgba(0,212,255,0.2)',
           }}
         >
           {brandName}
         </div>
-        <div className="text-white/50 text-sm tracking-[0.4em] uppercase">We Make It Shine</div>
-
-        {/* Tip row */}
-        <div className="mt-6 flex justify-center gap-3 items-end">
-          {[
-            { color: '#E8231A', angle: '0°',  h: 32 },
-            { color: '#FFD100', angle: '15°', h: 28 },
-            { color: '#00A550', angle: '25°', h: 24 },
-            { color: '#D8E8F0', angle: '40°', h: 20 },
-            { color: '#2A2A2A', angle: '65°', h: 16 },
-          ].map(t => (
-            <div key={t.angle} className="flex flex-col items-center gap-1">
-              <div
-                style={{
-                  width: 10,
-                  height: t.h,
-                  background: t.color,
-                  borderRadius: '3px 3px 2px 2px',
-                  boxShadow: `0 0 8px ${t.color}88`,
-                }}
-              />
-              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>{t.angle}</span>
-            </div>
+        <div className="mt-4 text-white/30 tracking-[0.5em] uppercase text-sm font-light">
+          We Make It Shine
+        </div>
+        <div className="mt-8 flex justify-center gap-3 items-end">
+          {[40, 32, 26, 20, 14].map((h, i) => (
+            <div key={i} style={{
+              width: 8, height: h,
+              background: `rgba(0,212,255,${0.25 + i * 0.06})`,
+              borderRadius: '3px 3px 2px 2px',
+            }} />
           ))}
         </div>
       </div>
 
-      <p ref={skipRef} className="absolute bottom-8 text-white/20 text-xs select-none" style={{ opacity: 0 }}>
-        tap to skip
+      <p
+        ref={skipRef}
+        className="absolute bottom-8 text-white/20 text-xs select-none"
+        style={{ opacity: 0 }}
+      >
+        tap anywhere to skip
       </p>
     </div>
   )
