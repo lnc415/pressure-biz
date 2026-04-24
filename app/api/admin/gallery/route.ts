@@ -2,6 +2,7 @@ import { isAuthenticated } from '@/lib/admin-auth'
 import { readData, writeData } from '@/lib/data'
 import { put, del } from '@vercel/blob'
 import type { GalleryPhoto } from '@/app/gallery/page'
+import { revalidatePath } from 'next/cache'
 
 export async function GET() {
   if (!await isAuthenticated()) return Response.json({ error: 'Unauthorized' }, { status: 401 })
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
   const photos = await readData<GalleryPhoto>('gallery')
   photos.push(photo)
   await writeData('gallery', photos)
+  revalidatePath('/gallery')
   return Response.json(photo)
 }
 
@@ -39,5 +41,6 @@ export async function DELETE(request: Request) {
     try { await del(photo.url) } catch { /* ignore */ }
   }
   await writeData('gallery', photos.filter(p => p.id !== id))
+  revalidatePath('/gallery')
   return Response.json({ ok: true })
 }
