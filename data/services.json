@@ -3,28 +3,28 @@
     "id": "1",
     "name": "Driveway & Concrete Cleaning",
     "description": "Blast away oil stains, grime, and discoloration from concrete driveways, sidewalks, and patios.",
-    "priceRange": "$75 – $200",
+    "priceRange": "$75 – $600",
     "icon": "🏠"
   },
   {
     "id": "2",
     "name": "House Softwash",
     "description": "Low-pressure softwash treatment that safely removes mold, mildew, algae, and dirt from siding without damage.",
-    "priceRange": "$150 – $400",
+    "priceRange": "$150 – $1,500",
     "icon": "🧹"
   },
   {
     "id": "3",
     "name": "Deck & Fence Cleaning",
     "description": "Restore the natural beauty of wood, composite, or vinyl decks and fences — prepped and ready for staining.",
-    "priceRange": "$100 – $300",
+    "priceRange": "$100 – $800",
     "icon": "🪵"
   },
   {
     "id": "4",
     "name": "Roof Softwash",
     "description": "Safe low-pressure roof cleaning that eliminates black streaks, moss, and algae without voiding your warranty.",
-    "priceRange": "$200 – $500",
+    "priceRange": "$200 – $1,200",
     "icon": "🏡"
   }
 ]
