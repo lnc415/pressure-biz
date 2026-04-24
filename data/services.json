@@ -1,30 +1,34 @@
 [
   {
     "id": "1",
-    "name": "Driveway & Concrete Cleaning",
-    "description": "Blast away oil stains, grime, and discoloration from concrete driveways, sidewalks, and patios.",
+    "name": "Masonry Restoration",
+    "plainName": "Driveway & Concrete Cleaning",
+    "description": "Blast away oil stains, grime, and discoloration from concrete driveways, sidewalks, and patios. Surfaces left clean and ready for sealing or staining.",
     "priceRange": "$75 – $600",
-    "icon": "🏠"
+    "icon": "🧱"
   },
   {
     "id": "2",
-    "name": "House Softwash",
-    "description": "Low-pressure softwash treatment that safely removes mold, mildew, algae, and dirt from siding without damage.",
+    "name": "Soft-Wash Preservation",
+    "plainName": "House Softwash",
+    "description": "Low-pressure softwash treatment that safely removes mold, mildew, algae, and dirt from siding without damage — preserving your home's character.",
     "priceRange": "$150 – $1,500",
-    "icon": "🧹"
+    "icon": "🏡"
   },
   {
     "id": "3",
-    "name": "Deck & Fence Cleaning",
-    "description": "Restore the natural beauty of wood, composite, or vinyl decks and fences — prepped and ready for staining.",
+    "name": "Timber & Deck Maintenance",
+    "plainName": "Deck & Fence Cleaning",
+    "description": "Restore the natural beauty of wood, composite, or vinyl decks and fences — cleaned and prepped for staining or a fresh season of use.",
     "priceRange": "$100 – $800",
     "icon": "🪵"
   },
   {
     "id": "4",
-    "name": "Roof Softwash",
-    "description": "Safe low-pressure roof cleaning that eliminates black streaks, moss, and algae without voiding your warranty.",
+    "name": "Roof Preservation",
+    "plainName": "Roof Softwash",
+    "description": "Safe low-pressure roof cleaning that eliminates black streaks, moss, and algae without voiding your warranty or damaging shingles.",
     "priceRange": "$200 – $1,200",
-    "icon": "🏡"
+    "icon": "🏠"
   }
 ]

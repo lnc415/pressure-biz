@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
@@ -21,20 +22,30 @@ export default function Nav({ brandName }: NavProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className="sticky top-0 z-50 shadow-lg" style={{ background: '#08111F', borderBottom: '1px solid rgba(0,212,255,0.1)' }}>
+    <nav className="sticky top-0 z-50 bg-[#FDFAF6] border-b border-[#D4C9B8] shadow-sm">
       <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
-        <Link href="/" className="font-black text-lg tracking-tight" style={{ color: '#00D4FF' }}>
-          {brandName}
+
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0">
+          <Image src="/logo.png" alt={brandName} width={38} height={38} className="object-contain" />
+          <span
+            className="font-serif font-bold text-[#2D4A2D] tracking-wide leading-none hidden sm:block"
+            style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: '1.1rem' }}
+          >
+            {brandName}
+          </span>
         </Link>
 
-        {/* Desktop */}
-        <ul className="hidden md:flex gap-6 items-center">
+        {/* Desktop links */}
+        <ul className="hidden md:flex gap-7 items-center">
           {links.map(({ href, label }) => (
             <li key={href}>
               <Link
                 href={href}
-                className={`nav-drip text-sm font-medium transition-colors hover:text-[#00D4FF] ${
-                  pathname === href ? 'text-[#00D4FF]' : 'text-white/60'
+                className={`nav-underline text-sm tracking-wide transition-colors ${
+                  pathname === href
+                    ? 'text-[#2D4A2D] font-semibold active'
+                    : 'text-[#5C6B5C] hover:text-[#2D4A2D]'
                 }`}
               >
                 {label}
@@ -42,25 +53,19 @@ export default function Nav({ brandName }: NavProps) {
             </li>
           ))}
           <li>
-            {/* Red tip button — highest urgency */}
-            <Link
-              href="/quote"
-              className="tip-btn tip-red text-sm"
-            >
-              <span className="tip-badge" />
-              Get a Quote
-              <span className="ml-1 text-xs opacity-50 font-normal">0°</span>
+            <Link href="/quote" className="mm-btn text-sm">
+              Request a Quote
             </Link>
           </li>
         </ul>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 text-white/60"
+          className="md:hidden p-2 text-[#2D4A2D]"
           onClick={() => setOpen(o => !o)}
           aria-label="Toggle menu"
         >
-          <span className="block w-5 h-0.5 bg-current mb-1.5" />
+          <span className="block w-5 h-0.5 bg-current mb-1.5 transition-all" />
           <span className="block w-5 h-0.5 bg-current mb-1.5" />
           <span className="block w-5 h-0.5 bg-current" />
         </button>
@@ -68,27 +73,19 @@ export default function Nav({ brandName }: NavProps) {
 
       {/* Mobile menu */}
       {open && (
-        <div
-          className="md:hidden px-4 py-4 flex flex-col gap-3"
-          style={{ borderTop: '1px solid rgba(0,212,255,0.1)', background: '#08111F' }}
-        >
+        <div className="md:hidden px-4 py-5 flex flex-col gap-4 border-t border-[#D4C9B8] bg-[#FDFAF6]">
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              className={`text-sm font-medium ${pathname === href ? 'text-[#00D4FF]' : 'text-white/60'}`}
+              className={`text-sm tracking-wide ${pathname === href ? 'text-[#2D4A2D] font-semibold' : 'text-[#5C6B5C]'}`}
             >
               {label}
             </Link>
           ))}
-          <Link
-            href="/quote"
-            onClick={() => setOpen(false)}
-            className="tip-btn tip-red text-sm self-start"
-          >
-            <span className="tip-badge" />
-            Get a Quote
+          <Link href="/quote" onClick={() => setOpen(false)} className="mm-btn self-start text-sm">
+            Request a Quote
           </Link>
         </div>
       )}

@@ -22,8 +22,8 @@ export default function AdminPanel() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-[#0C1A2E] text-white px-4 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-black text-[#38BDF8]">Admin Panel</h1>
+      <div className="bg-[#2D4A2D] text-white px-4 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-[#9B7A2F]">Mist and Main — Admin</h1>
         <button onClick={logout} className="text-sm text-white/60 hover:text-white transition-colors">Log out</button>
       </div>
 
@@ -34,7 +34,7 @@ export default function AdminPanel() {
             key={t}
             onClick={() => setTab(t)}
             className={`px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors ${
-              tab === t ? 'border-[#38BDF8] text-[#0C1A2E]' : 'border-transparent text-[#64748B] hover:text-[#0C1A2E]'
+              tab === t ? 'border-[#2D4A2D] text-[#2D4A2D]' : 'border-transparent text-[#64748B] hover:text-[#2D4A2D]'
             }`}
           >
             {t}

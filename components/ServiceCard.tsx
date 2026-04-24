@@ -3,21 +3,11 @@ import Link from 'next/link'
 export interface Service {
   id: string
   name: string
+  plainName?: string
   description: string
   priceRange?: string
   icon: string
-  tipColor?: string // 'red' | 'yellow' | 'green' | 'white' | 'black'
-}
-
-// Default tip colors by position
-const DEFAULT_TIPS = ['red', 'yellow', 'green', 'white', 'black']
-
-const TIP_HEX: Record<string, { bg: string; label: string; angle: string }> = {
-  red:    { bg: '#E8231A', label: 'Max Power',  angle: '0°'  },
-  yellow: { bg: '#FFD100', label: 'High Power', angle: '15°' },
-  green:  { bg: '#00A550', label: 'General',    angle: '25°' },
-  white:  { bg: '#D8E8F0', label: 'Light Duty', angle: '40°' },
-  black:  { bg: '#2A2A2A', label: 'Soap',       angle: '65°' },
+  tipColor?: string
 }
 
 interface ServiceCardProps {
@@ -25,44 +15,51 @@ interface ServiceCardProps {
   tipIndex?: number
 }
 
-export default function ServiceCard({ service, tipIndex = 0 }: ServiceCardProps) {
-  const tipKey = service.tipColor || DEFAULT_TIPS[tipIndex % DEFAULT_TIPS.length]
-  const tip = TIP_HEX[tipKey]
-
+export default function ServiceCard({ service }: ServiceCardProps) {
   return (
-    <div className="pressure-card bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex flex-col h-full">
-      {/* Tip header bar */}
-      <div
-        className="flex items-center gap-2 px-4 py-2"
-        style={{ background: tip.bg }}
-      >
-        <div
-          className="w-2.5 h-2.5 rounded-full"
-          style={{ background: 'rgba(255,255,255,0.5)', boxShadow: '0 0 4px rgba(255,255,255,0.4)' }}
-        />
-        <span
-          className="text-xs font-bold tracking-wider uppercase"
-          style={{ color: tipKey === 'yellow' || tipKey === 'white' ? '#08111F' : '#fff' }}
-        >
-          {tip.label} · {tip.angle}
-        </span>
-      </div>
+    <div className="heritage-card bg-[#FDFAF6] border border-[#D4C9B8] rounded flex flex-col h-full">
+      <div className="p-6 flex flex-col gap-4 flex-1">
 
-      <div className="p-5 flex flex-col gap-3 flex-1">
+        {/* Icon */}
         <div className="text-3xl">{service.icon}</div>
-        <h3 className="text-base font-bold text-[#08111F] leading-tight">{service.name}</h3>
-        <p className="text-[#5A7A9A] text-sm flex-1 leading-relaxed">{service.description}</p>
+
+        {/* Name with plain-English tooltip on hover */}
+        <div className="relative group">
+          <h3
+            className="text-xl font-bold text-[#1C1C1C] leading-tight cursor-default"
+            style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+          >
+            {service.name}
+          </h3>
+          {service.plainName && (
+            <div
+              className="absolute bottom-full left-0 mb-2 px-2.5 py-1.5 rounded text-xs whitespace-nowrap z-10 pointer-events-none
+                         opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              style={{ background: '#2D4A2D', color: '#F5F0E8' }}
+            >
+              {service.plainName}
+              <div
+                className="absolute top-full left-4 w-0 h-0"
+                style={{ borderLeft: '5px solid transparent', borderRight: '5px solid transparent', borderTop: '5px solid #2D4A2D' }}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Description */}
+        <p className="text-[#5C6B5C] text-sm flex-1 leading-relaxed">{service.description}</p>
+
+        {/* Price */}
         {service.priceRange && (
-          <p className="font-bold text-sm" style={{ color: tip.bg === '#D8E8F0' ? '#08111F' : tip.bg }}>
-            {service.priceRange}
-          </p>
+          <p className="font-semibold text-sm text-[#9B7A2F]">{service.priceRange}</p>
         )}
+
+        {/* CTA */}
         <Link
           href={`/quote?service=${encodeURIComponent(service.name)}`}
-          className={`tip-btn tip-${tipKey} mt-auto self-start text-sm`}
+          className="mm-btn mt-auto self-start text-sm"
         >
-          <span className="tip-badge" />
-          Quote This
+          Request a Quote
         </Link>
       </div>
     </div>

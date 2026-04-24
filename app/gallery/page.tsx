@@ -19,8 +19,16 @@ export default async function GalleryPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-16">
       <FadeUp>
-        <h1 className="text-4xl font-black text-[#0C1A2E] mb-2">Our Work</h1>
-        <p className="text-[#64748B] mb-10">See the CamSplash difference — before and after, job by job.</p>
+        <p className="text-[#9B7A2F] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Our Work</p>
+        <h1
+          className="text-[#1C1C1C] mb-3"
+          style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(2rem, 5vw, 3rem)' }}
+        >
+          The Mist and Main Standard
+        </h1>
+        <p className="text-[#5C6B5C] mb-12 max-w-xl">
+          Before and after — the results speak for themselves. Every job treated with care, every surface restored.
+        </p>
       </FadeUp>
       <GalleryGrid photos={photos} />
     </div>

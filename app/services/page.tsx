@@ -17,35 +17,28 @@ export default async function ServicesPage() {
 
       {/* ── Residential ── */}
       <FadeUp>
-        <h1 className="text-4xl font-black text-[#08111F] mb-2">Choose Your Tip</h1>
-        <p className="text-[#5A7A9A] mb-3 max-w-xl">
-          Each service uses the right tip for the job — from max-power driveways to gentle roof softwash.
+        <p className="text-[#9B7A2F] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Residential</p>
+        <h1
+          className="text-[#1C1C1C] mb-3"
+          style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(2rem, 5vw, 3rem)' }}
+        >
+          Restoration Services
+        </h1>
+        <p className="text-[#5C6B5C] mb-2 max-w-xl">
+          Every service uses the right method for the surface — from high-pressure masonry to gentle soft-wash preservation.
         </p>
-        {/* Tip legend */}
-        <div className="flex flex-wrap gap-3 mb-12">
-          {[
-            { color: '#E8231A', angle: '0°',  label: 'Max Power' },
-            { color: '#FFD100', angle: '15°', label: 'High Power' },
-            { color: '#00A550', angle: '25°', label: 'General' },
-            { color: '#D8E8F0', angle: '40°', label: 'Light Duty' },
-            { color: '#2A2A2A', angle: '65°', label: 'Soap' },
-          ].map(t => (
-            <div key={t.angle} className="flex items-center gap-1.5 text-xs text-[#5A7A9A]">
-              <div style={{ width: 8, height: 16, background: t.color, borderRadius: 2 }} />
-              <span className="font-semibold">{t.angle}</span>
-              <span>{t.label}</span>
-            </div>
-          ))}
-        </div>
+        <p className="text-[#9B7A2F] text-xs mb-12 italic">
+          Hover any service name to see plain-English description.
+        </p>
       </FadeUp>
 
       {services.length === 0 ? (
-        <p className="text-[#5A7A9A]">Services coming soon!</p>
+        <p className="text-[#5C6B5C]">Services coming soon.</p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map((s, i) => (
+          {services.map(s => (
             <FadeUp key={s.id} className="h-full">
-              <ServiceCard service={s} tipIndex={i} />
+              <ServiceCard service={s} />
             </FadeUp>
           ))}
         </div>
@@ -55,29 +48,33 @@ export default async function ServicesPage() {
       {commercialServices.length > 0 && (
         <>
           <FadeUp>
-            <div className="flex items-center gap-4 mt-20 mb-10">
-              <div className="flex-1 h-px bg-gray-200" />
-              <div className="text-center">
-                <span className="text-xs font-bold tracking-widest uppercase text-[#5A7A9A]">Commercial &amp; Large-Scale</span>
-                <h2 className="text-3xl font-black text-[#08111F] mt-1">We Scale With You</h2>
-                <p className="text-[#5A7A9A] text-sm mt-1 max-w-lg mx-auto">
-                  From storefronts to apartment complexes — we handle multi-crew jobs, recurring contracts, and large properties across the Tri-Cities.
-                </p>
-              </div>
-              <div className="flex-1 h-px bg-gray-200" />
+            <div className="ornament-divider mt-20 mb-10">
+              <span>✦</span>
+            </div>
+            <div className="text-center mb-12">
+              <p className="text-[#9B7A2F] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Commercial & Large-Scale</p>
+              <h2
+                className="text-[#1C1C1C] mb-3"
+                style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)' }}
+              >
+                We Scale With You
+              </h2>
+              <p className="text-[#5C6B5C] max-w-lg mx-auto">
+                From storefronts to apartment complexes and HOA communities — we handle multi-crew jobs,
+                recurring contracts, and large properties across the Tri-Cities.
+              </p>
             </div>
           </FadeUp>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {commercialServices.map((s, i) => (
+            {commercialServices.map(s => (
               <FadeUp key={s.id} className="h-full">
-                <ServiceCard service={s} tipIndex={i} />
+                <ServiceCard service={s} />
               </FadeUp>
             ))}
           </div>
         </>
       )}
-
     </div>
   )
 }

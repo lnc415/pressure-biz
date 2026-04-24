@@ -1,100 +1,69 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { gsap } from 'gsap'
 
 interface SplashIntroProps {
   brandName: string
+  logoSrc: string
 }
 
-const COLORS: [number, number, number][] = [
-  [255, 255, 255],  // white
-  [220, 245, 255],  // icy white-blue
-  [180, 230, 255],  // light sky
-  [100, 215, 255],  // soft cyan
-  [0,   200, 248],  // water
-  [0,   212, 255],  // brand cyan
-]
-
-class Drop {
+class MistParticle {
   x: number; y: number
   vx: number; vy: number
   life: number; maxLife: number
-  w: number
-  r: number; g: number; b: number
+  size: number
 
-  constructor(ox: number, oy: number) {
-    // Speed calibrated so drops are visible ACROSS the full screen:
-    // at 1600px wide, we want drops to take ~100 frames to cross → speed ≈ 18–28
-    const speed  = 16 + Math.random() * 16       // 16–32 px/frame
-    const spread = 40                              // 40° total cone
-    const half   = (spread * Math.PI) / 180 / 2
-    const angle  = Math.PI - half + Math.random() * half * 2  // pointing left
-
-    this.x = ox
-    this.y = oy
-    this.vx = Math.cos(angle) * speed
-    this.vy = Math.sin(angle) * speed
-
-    // Long life so drops remain visible while crossing the screen
-    this.maxLife = 110 + Math.random() * 70      // 110–180 frames
-    this.life    = 0
-    this.w       = 0.8 + Math.random() * 2.2
-
-    const [r, g, b] = COLORS[Math.floor(Math.random() * COLORS.length)]
-    this.r = r; this.g = g; this.b = b
+  constructor(W: number, H: number) {
+    this.x = Math.random() * W
+    this.y = H * 0.5 + Math.random() * H * 0.5
+    this.vx = (Math.random() - 0.5) * 0.4
+    this.vy = -(0.15 + Math.random() * 0.35)
+    this.size = 40 + Math.random() * 80
+    this.maxLife = 200 + Math.random() * 150
+    this.life = 0
   }
 
   update() {
-    this.x  += this.vx
-    this.y  += this.vy
-    this.vy += 0.18        // gentle gravity — arc downward
-    this.vx *= 0.996       // very low drag — keeps speed through full arc
+    this.x += this.vx
+    this.y += this.vy
     this.life++
   }
 
   draw(ctx: CanvasRenderingContext2D) {
     const t = this.life / this.maxLife
-    const alpha = t < 0.08
-      ? t / 0.08                                   // quick fade in
-      : 1 - Math.pow((t - 0.08) / 0.92, 1.8)      // gentle fade out
+    const alpha = t < 0.25
+      ? (t / 0.25) * 0.13
+      : (1 - t) * 0.13
 
-    if (alpha <= 0.01) return
+    if (alpha <= 0.005) return
 
-    const speed   = Math.hypot(this.vx, this.vy)
-    const tailLen = Math.min(speed * 1.5, 30)
+    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size)
+    grad.addColorStop(0, `rgba(245, 240, 232, ${alpha})`)
+    grad.addColorStop(1, `rgba(245, 240, 232, 0)`)
 
     ctx.save()
-    ctx.globalAlpha = alpha * 0.75
     ctx.beginPath()
-    ctx.moveTo(this.x, this.y)
-    ctx.lineTo(
-      this.x - (this.vx / speed) * tailLen,
-      this.y - (this.vy / speed) * tailLen,
-    )
-    ctx.strokeStyle = `rgb(${this.r},${this.g},${this.b})`
-    ctx.lineWidth   = this.w
-    ctx.lineCap     = 'round'
-    ctx.stroke()
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+    ctx.fillStyle = grad
+    ctx.fill()
     ctx.restore()
   }
 
-  isDead(H: number) {
-    return this.life >= this.maxLife || this.y > H + 100
-  }
+  isDead() { return this.life >= this.maxLife }
 }
 
-export default function SplashIntro({ brandName }: SplashIntroProps) {
+export default function SplashIntro({ brandName, logoSrc }: SplashIntroProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
   const canvasRef  = useRef<HTMLCanvasElement>(null)
   const logoRef    = useRef<HTMLDivElement>(null)
   const skipRef    = useRef<HTMLParagraphElement>(null)
   const [visible, setVisible] = useState(false)
-  const animId   = useRef<number>(0)
-  const drops    = useRef<Drop[]>([])
-  const emitting = useRef(true)
+  const animId    = useRef<number>(0)
+  const particles = useRef<MistParticle[]>([])
+  const emitting  = useRef(true)
 
-  // Every visit — no sessionStorage gate
   useEffect(() => { setVisible(true) }, [])
 
   useEffect(() => {
@@ -111,30 +80,23 @@ export default function SplashIntro({ brandName }: SplashIntroProps) {
     resize()
     window.addEventListener('resize', resize)
 
-    // Nozzle: right edge, 40% down from top
-    const ox = () => canvas.width + 8
-    const oy = () => canvas.height * 0.40
-
     const tl = gsap.timeline({ onComplete: () => setVisible(false) })
 
-    // Logo appears at 1.2s (spray is filling the screen by then)
     tl.fromTo(logoRef.current,
-      { opacity: 0, y: 18 },
-      { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-      1.2
+      { opacity: 0, y: 20, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power2.out' },
+      0.6
     )
     tl.fromTo(skipRef.current,
       { opacity: 0 }, { opacity: 1, duration: 0.4 },
-      1.8
+      1.4
     )
-
-    // 3.0s: overlay blasts off to the left
     tl.to(overlay, {
-      xPercent: -110,
-      duration: 0.55,
-      ease: 'power3.inOut',
+      opacity: 0,
+      duration: 0.7,
+      ease: 'power2.inOut',
       onStart: () => { emitting.current = false },
-    }, 3.0)
+    }, 3.2)
 
     let frame = 0
     const loop = () => {
@@ -145,20 +107,17 @@ export default function SplashIntro({ brandName }: SplashIntroProps) {
 
       if (emitting.current) {
         frame++
-        const x = ox(), y = oy()
-        // Ramp up hard in first 20 frames so the blast feels instant
-        const ramp  = Math.min(frame / 20, 1)
-        const count = Math.round(ramp * 30)
+        const count = frame < 30 ? Math.round((frame / 30) * 3) : 2
         for (let i = 0; i < count; i++) {
-          drops.current.push(new Drop(x, y))
+          particles.current.push(new MistParticle(W, H))
         }
       }
 
-      for (let i = drops.current.length - 1; i >= 0; i--) {
-        const d = drops.current[i]
-        d.update()
-        d.draw(ctx)
-        if (d.isDead(H)) drops.current.splice(i, 1)
+      for (let i = particles.current.length - 1; i >= 0; i--) {
+        const p = particles.current[i]
+        p.update()
+        p.draw(ctx)
+        if (p.isDead()) particles.current.splice(i, 1)
       }
     }
     animId.current = requestAnimationFrame(loop)
@@ -183,38 +142,31 @@ export default function SplashIntro({ brandName }: SplashIntroProps) {
       ref={overlayRef}
       onClick={skip}
       className="fixed inset-0 z-[9999] flex items-center justify-center cursor-pointer overflow-hidden"
-      style={{ background: 'linear-gradient(160deg,#08111F 0%,#0D1B30 100%)' }}
+      style={{ background: 'linear-gradient(160deg, #1A2E1A 0%, #2D4A2D 100%)' }}
     >
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
-      <div ref={logoRef} className="relative z-10 text-center select-none" style={{ opacity: 0 }}>
+      <div ref={logoRef} className="relative z-10 text-center select-none px-6" style={{ opacity: 0 }}>
+        <div className="flex justify-center mb-6">
+          <Image
+            src={logoSrc}
+            alt={brandName}
+            width={160}
+            height={160}
+            className="object-contain drop-shadow-2xl"
+            priority
+          />
+        </div>
         <div
-          className="font-black tracking-tight leading-none"
-          style={{
-            fontSize: 'clamp(4rem, 14vw, 8.5rem)',
-            color: '#00D4FF',
-            textShadow: '0 0 60px rgba(0,212,255,0.55), 0 0 130px rgba(0,212,255,0.2)',
-          }}
+          className="text-[#F5F0E8] tracking-[0.18em] uppercase text-xs font-light mt-2 opacity-60"
         >
-          {brandName}
-        </div>
-        <div className="mt-4 text-white/30 tracking-[0.5em] uppercase text-sm font-light">
-          We Make It Shine
-        </div>
-        <div className="mt-8 flex justify-center gap-3 items-end">
-          {[40, 32, 26, 20, 14].map((h, i) => (
-            <div key={i} style={{
-              width: 8, height: h,
-              background: `rgba(0,212,255,${0.25 + i * 0.06})`,
-              borderRadius: '3px 3px 2px 2px',
-            }} />
-          ))}
+          Old Towne Clean
         </div>
       </div>
 
       <p
         ref={skipRef}
-        className="absolute bottom-8 text-white/20 text-xs select-none"
+        className="absolute bottom-8 text-[#F5F0E8]/25 text-xs select-none"
         style={{ opacity: 0 }}
       >
         tap anywhere to skip

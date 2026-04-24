@@ -13,15 +13,21 @@ export interface Brand {
 }
 
 const DEFAULT_BRAND: Brand = {
-  name: 'CamSplash',
-  tagline: 'We Make It Shine.',
-  logo: '',
-  aboutCopy: 'CamSplash is a family-run pressure washing and softwash business serving our local community.',
-  serviceArea: 'Serving the greater local area and surrounding communities.',
-  whyUs: ['Fully insured and licensed', 'Family-run', 'Eco-friendly solutions available', 'Satisfaction guaranteed'],
-  email1: 'owner@camsplash.com',
+  name: 'Mist and Main',
+  tagline: 'Old Towne Clean.',
+  logo: '/logo.png',
+  aboutCopy: 'Mist and Main is a professional exterior cleaning company rooted in Jonesborough — Tennessee\'s oldest town. We treat every property with the same care and respect this community has shown its historic architecture for generations.',
+  serviceArea: 'Proudly serving Jonesborough, Johnson City, Kingsport, Bristol, and the greater Tri-Cities region.',
+  whyUs: [
+    'Fully insured and licensed',
+    'Soft-wash technology that protects historic surfaces',
+    'Eco-friendly cleaning solutions',
+    'All-crew professionals — no day laborers',
+    'Satisfaction guaranteed on every job',
+  ],
+  email1: 'hello@mistandmain.com',
   email2: '',
-  phone: '(555) 000-0000',
+  phone: '(423) 000-0000',
 }
 
 export async function getBrand(): Promise<Brand> {

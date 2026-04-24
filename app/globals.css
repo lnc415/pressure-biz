@@ -1,38 +1,172 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-navy:  #08111F;
-  --color-navy2: #0E1E35;
-  --color-water: #00D4FF;
-  --color-power: #FF6B00;
-  --color-foam:  #E8F4FF;
-  --color-muted: #5A7A9A;
+  /* ── Mist and Main palette ── */
+  --color-green:    #2D4A2D;   /* Forest Green — primary */
+  --color-brass:    #9B7A2F;   /* Brass/Gold — accent */
+  --color-cream:    #F5F0E8;   /* Cream — page background */
+  --color-cream2:   #FDFAF6;   /* Warm white — card bg */
+  --color-brick:    #8B2E16;   /* Brick Red — secondary accent */
+  --color-charcoal: #1C1C1C;   /* Deep text */
+  --color-muted:    #5C6B5C;   /* Muted body text */
+  --color-border:   #D4C9B8;   /* Warm border */
 
-  /* The 5 pressure-washer tip colors */
-  --color-tip-red:    #E8231A;
-  --color-tip-yellow: #FFD100;
-  --color-tip-green:  #00A550;
-  --color-tip-white:  #D8E8F0;
-  --color-tip-black:  #2A2A2A;
+  /* ── Typography ── */
+  --font-serif: var(--font-playfair), Georgia, 'Times New Roman', serif;
+  --font-sans:  var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background: #ffffff;
-  color: #08111F;
-  font-family: system-ui, -apple-system, sans-serif;
+  background: #F5F0E8;
+  color: #1C1C1C;
+  font-family: var(--font-sans);
 }
 
-/* ─── Tip-shaped button (nozzle pentagon) ─────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+}
+
+/* ─── Heritage button (primary — forest green) ─────────────────────────── */
+.mm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 26px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border: 1.5px solid #2D4A2D;
+  background: #2D4A2D;
+  color: #F5F0E8;
+  transition: background 0.22s, color 0.22s, transform 0.15s, box-shadow 0.22s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mm-btn:hover {
+  background: #F5F0E8;
+  color: #2D4A2D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(45, 74, 45, 0.18);
+}
+.mm-btn:active { transform: translateY(0); }
+
+/* Brass variant */
+.mm-btn-brass {
+  border-color: #9B7A2F;
+  background: #9B7A2F;
+  color: #F5F0E8;
+}
+.mm-btn-brass:hover {
+  background: #F5F0E8;
+  color: #9B7A2F;
+  box-shadow: 0 4px 18px rgba(155, 122, 47, 0.18);
+}
+
+/* Outline on cream */
+.mm-btn-outline {
+  background: transparent;
+  color: #2D4A2D;
+}
+.mm-btn-outline:hover {
+  background: #2D4A2D;
+  color: #F5F0E8;
+}
+
+/* Outline on dark backgrounds */
+.mm-btn-outline-light {
+  border-color: rgba(245, 240, 232, 0.55);
+  background: transparent;
+  color: #F5F0E8;
+}
+.mm-btn-outline-light:hover {
+  background: #F5F0E8;
+  color: #2D4A2D;
+  border-color: #F5F0E8;
+}
+
+/* Disabled state for all variants */
+.mm-btn:disabled,
+.mm-btn-brass:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Heritage card ─────────────────────────────────────────────────────── */
+.heritage-card {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.heritage-card:hover {
+  box-shadow: 0 6px 28px rgba(45, 74, 45, 0.10);
+  transform: translateY(-2px);
+}
+.heritage-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(155, 122, 47, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.heritage-card:hover::after { opacity: 1; }
+
+/* ─── Nav link underline ────────────────────────────────────────────────── */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: #9B7A2F;
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+.nav-underline:hover::after,
+.nav-underline.active::after { width: 100%; }
+
+/* ─── Ornamental divider ────────────────────────────────────────────────── */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #9B7A2F;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #D4C9B8, transparent);
+}
+
+/* ─── Mist rise animation (decorative) ─────────────────────────────────── */
+@keyframes mist-rise {
+  0%   { transform: translateY(0) scale(1);   opacity: 0.5; }
+  100% { transform: translateY(-50px) scale(1.4); opacity: 0; }
+}
+
+/* ─── Legacy tip-btn kept for admin compatibility ───────────────────────── */
 .tip-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 28px 14px 20px;
+  padding: 10px 22px;
   font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%);
+  font-size: 0.875rem;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
   transition: filter 0.2s, transform 0.15s;
   cursor: pointer;
   white-space: nowrap;
@@ -40,73 +174,12 @@ body {
   border: none;
   outline: none;
 }
-.tip-btn:hover {
-  filter: brightness(1.12);
-  transform: translateX(3px);
-}
-.tip-btn:active {
-  transform: translateX(1px);
-}
-
-/* Tip badge — the small coloured dot that looks like the tip opening */
-.tip-badge {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.55);
-  flex-shrink: 0;
-  box-shadow: 0 0 6px 2px rgba(255,255,255,0.4);
-}
-
-/* ─── Tip variants ────────────────────────────────────────────────────── */
+.tip-btn:hover { filter: brightness(1.1); transform: translateX(2px); }
+.tip-badge { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.5); flex-shrink: 0; }
 .tip-red    { background: #E8231A; color: #fff; }
-.tip-yellow { background: #FFD100; color: #08111F; }
+.tip-yellow { background: #FFD100; color: #1C1C1C; }
 .tip-green  { background: #00A550; color: #fff; }
-.tip-white  { background: #D8E8F0; color: #08111F; border: 1.5px solid #a0b8cc; }
+.tip-white  { background: #D8E8F0; color: #1C1C1C; border: 1.5px solid #a0b8cc; }
 .tip-black  { background: #2A2A2A; color: #fff; }
-
-/* Water-drip nav underline */
-.nav-drip {
-  position: relative;
-}
-.nav-drip::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: #00D4FF;
-  border-radius: 9999px;
-  transform: translateX(-50%);
-  transition: width 0.3s ease;
-}
-.nav-drip:hover::after { width: 100%; }
-
-/* Pressure-stream hover shimmer (for cards, sections) */
-.pressure-card {
-  position: relative;
-  overflow: hidden;
-}
-.pressure-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -60%;
-  width: 40%;
-  height: 200%;
-  background: linear-gradient(105deg, transparent 40%, rgba(0,212,255,0.08) 50%, transparent 60%);
-  transform: skewX(-20deg);
-  transition: left 0.5s ease;
-  pointer-events: none;
-}
-.pressure-card:hover::before {
-  left: 120%;
-}
-
-/* Spray-drip keyframe for decoration */
-@keyframes drip {
-  0%   { transform: scaleY(0) translateY(0); opacity: 1; }
-  60%  { transform: scaleY(1) translateY(0); opacity: 1; }
-  100% { transform: scaleY(1) translateY(12px); opacity: 0; }
-}
+.pressure-card { position: relative; overflow: hidden; }
+.nav-drip { position: relative; }

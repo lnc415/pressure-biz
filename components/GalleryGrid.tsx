@@ -13,9 +13,15 @@ export default function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
 
   if (photos.length === 0) {
     return (
-      <div className="text-center py-20 text-[#64748B]">
-        <div className="text-6xl mb-4">📸</div>
-        <p>Gallery photos coming soon — check back after our first jobs!</p>
+      <div className="text-center py-24 text-[#5C6B5C] border border-[#D4C9B8] rounded bg-[#FDFAF6]">
+        <div className="text-5xl mb-4">📸</div>
+        <p
+          className="mb-2"
+          style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: '1.2rem', color: '#1C1C1C' }}
+        >
+          Gallery coming soon
+        </p>
+        <p className="text-sm">Job photos will be added as the crew gets to work.</p>
       </div>
     )
   }
@@ -28,10 +34,10 @@ export default function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
             <button
               key={tag}
               onClick={() => setActive(tag)}
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+              className={`px-4 py-1.5 text-sm font-semibold border transition-colors rounded ${
                 active === tag
-                  ? 'bg-[#38BDF8] text-[#0C1A2E]'
-                  : 'bg-gray-100 text-[#64748B] hover:bg-gray-200'
+                  ? 'bg-[#2D4A2D] text-[#F5F0E8] border-[#2D4A2D]'
+                  : 'bg-transparent text-[#5C6B5C] border-[#D4C9B8] hover:border-[#2D4A2D] hover:text-[#2D4A2D]'
               }`}
             >
               {tag}
@@ -42,10 +48,13 @@ export default function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(photo => (
           <FadeUp key={photo.id}>
-            <div className="rounded-2xl overflow-hidden bg-gray-100 aspect-video relative">
+            <div className="rounded overflow-hidden bg-[#D4C9B8] aspect-video relative border border-[#D4C9B8]">
               <Image src={photo.url} alt={photo.caption || photo.tag} fill className="object-cover" />
               {photo.caption && (
-                <div className="absolute bottom-0 inset-x-0 bg-[#0C1A2E]/70 text-white text-xs p-2">
+                <div
+                  className="absolute bottom-0 inset-x-0 px-3 py-2 text-xs text-[#F5F0E8]"
+                  style={{ background: 'rgba(45, 74, 45, 0.85)' }}
+                >
                   {photo.caption}
                 </div>
               )}

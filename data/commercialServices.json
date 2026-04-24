@@ -1,43 +1,49 @@
 [
   {
     "id": "c1",
-    "name": "Building Exterior Washing",
+    "name": "Facade Restoration",
+    "plainName": "Building Exterior Washing",
     "description": "Full facade cleaning for offices, retail centers, and industrial buildings — removing dirt, algae, and weathering from brick, stucco, metal, and more.",
     "priceRange": "$500 – $8,000",
     "icon": "🏢"
   },
   {
     "id": "c2",
-    "name": "Parking Lot & Garage Cleaning",
-    "description": "High-volume surface cleaning for parking lots, parking decks, and driveways — oil stains, tire marks, gum, and debris removed at scale.",
+    "name": "Surface & Pavement Renewal",
+    "plainName": "Parking Lot & Garage Cleaning",
+    "description": "High-volume surface cleaning for parking lots, decks, and driveways — oil stains, tire marks, gum, and debris removed at scale.",
     "priceRange": "$500 – $15,000",
     "icon": "🅿️"
   },
   {
     "id": "c3",
-    "name": "Multi-Unit & Apartment Complex",
+    "name": "Community Property Care",
+    "plainName": "Multi-Unit / Apartment Complex",
     "description": "Full-property washing for apartment complexes and condos — siding, breezeways, stairwells, dumpster pads, and common areas handled top to bottom.",
     "priceRange": "$1,000 – $25,000",
     "icon": "🏘️"
   },
   {
     "id": "c4",
-    "name": "HOA Common Area Cleaning",
-    "description": "Keep your community looking its best — entrances, clubhouses, pool decks, sidewalks, and signage cleaned to the standard your residents expect.",
+    "name": "Common Grounds Preservation",
+    "plainName": "HOA Common Area Cleaning",
+    "description": "Keep your community looking its best — entrances, clubhouses, pool decks, sidewalks, and signage cleaned to the standard your residents expect and deserve.",
     "priceRange": "$300 – $10,000",
     "icon": "🏛️"
   },
   {
     "id": "c5",
-    "name": "Storefront & Sidewalk Cleaning",
+    "name": "Streetscape Maintenance",
+    "plainName": "Storefront & Sidewalk Cleaning",
     "description": "Curb appeal that drives foot traffic — storefronts, awnings, sidewalks, and entryways cleaned regularly to keep your business looking sharp.",
     "priceRange": "$150 – $2,000",
     "icon": "🏪"
   },
   {
     "id": "c6",
-    "name": "Graffiti Removal",
-    "description": "Fast, thorough graffiti removal from brick, concrete, metal, and painted surfaces — restoring your property's appearance without damage.",
+    "name": "Surface Rehabilitation",
+    "plainName": "Graffiti Removal",
+    "description": "Fast, thorough graffiti removal from brick, concrete, metal, and painted surfaces — restoring your property's appearance without further damage.",
     "priceRange": "$200 – $3,000",
     "icon": "🧽"
   }
