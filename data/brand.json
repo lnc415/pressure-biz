@@ -1,16 +1,17 @@
 {
-  "name": "CamSplash",
-  "tagline": "We Make It Shine.",
-  "logo": "",
-  "aboutCopy": "CamSplash is a family-run pressure washing and softwash business serving our local community. We take pride in every job — from driveways to decks — and we don't leave until it's spotless.",
-  "serviceArea": "Serving the greater local area and surrounding communities.",
+  "name": "Mist and Main",
+  "tagline": "Old Towne Clean.",
+  "logo": "/logo.png",
+  "aboutCopy": "Mist and Main is a professional exterior cleaning company rooted in Jonesborough — Tennessee's oldest town. We treat every property with the same care and respect this community has shown its historic architecture for generations.",
+  "serviceArea": "Proudly serving Jonesborough, Johnson City, Kingsport, Bristol, and the greater Tri-Cities region.",
   "whyUs": [
     "Fully insured and licensed",
-    "Family-run — we treat your property like our own",
-    "Eco-friendly cleaning solutions available",
-    "Satisfaction guaranteed or we come back"
+    "Soft-wash technology that protects historic surfaces",
+    "Eco-friendly cleaning solutions",
+    "All-crew professionals — no day laborers",
+    "Satisfaction guaranteed on every job"
   ],
-  "email1": "owner@camsplash.com",
-  "email2": "wife@camsplash.com",
-  "phone": "(555) 000-0000"
+  "email1": "hello@mistandmain.com",
+  "email2": "",
+  "phone": "(423) 000-0000"
 }
