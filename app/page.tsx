@@ -75,8 +75,7 @@ export default async function Home() {
               width={240}
               height={240}
               className="object-contain drop-shadow-2xl"
-              style={{ filter: 'brightness(0) invert(1) sepia(0.15)' }}
-              priority
+priority
             />
           </div>
         </div>
