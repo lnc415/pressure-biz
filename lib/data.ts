@@ -6,12 +6,11 @@ let _redis: import('@upstash/redis').Redis | null = null
 
 async function getRedis() {
   if (_redis) return _redis
-  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  const url   = process.env.UPSTASH_REDIS_REST_URL   || process.env.KV_REST_API_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN
+  if (url && token) {
     const { Redis } = await import('@upstash/redis')
-    _redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    })
+    _redis = new Redis({ url, token })
     return _redis
   }
   return null
