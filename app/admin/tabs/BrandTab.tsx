@@ -7,6 +7,7 @@ export default function BrandTab() {
   const [brand, setBrand] = useState<Brand | null>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -26,10 +27,21 @@ export default function BrandTab() {
 
   const save = async () => {
     setSaving(true)
-    await fetch('/api/admin/brand', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(brand) })
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    setSaveError('')
+    try {
+      const res = await fetch('/api/admin/brand', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(brand) })
+      const json = await res.json()
+      if (!res.ok) {
+        setSaveError(json.error || `Error ${res.status}`)
+      } else {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      }
+    } catch (err) {
+      setSaveError(String(err))
+    } finally {
+      setSaving(false)
+    }
   }
 
   const uploadLogo = async () => {
@@ -114,9 +126,16 @@ export default function BrandTab() {
         </div>
       </div>
 
-      <button onClick={save} disabled={saving} className="bg-[#0C1A2E] text-white font-bold px-8 py-3 rounded-full hover:bg-[#38BDF8] hover:text-[#0C1A2E] transition-colors disabled:opacity-50 self-start">
-        {saved ? 'Saved ✓' : saving ? 'Saving...' : 'Save Brand Settings'}
-      </button>
+      <div className="flex flex-col gap-2 self-start">
+        <button onClick={save} disabled={saving} className="bg-[#2D4A2D] text-white font-bold px-8 py-3 rounded-full hover:bg-[#9B7A2F] transition-colors disabled:opacity-50">
+          {saved ? 'Saved ✓' : saving ? 'Saving...' : 'Save Brand Settings'}
+        </button>
+        {saveError && (
+          <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded px-3 py-2 max-w-sm">
+            <strong>Save failed:</strong> {saveError}
+          </p>
+        )}
+      </div>
     </div>
   )
 }
