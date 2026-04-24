@@ -67,7 +67,7 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Logo mark */}
+          {/* Logo mark — inverted to cream so it reads on dark green */}
           <div className="shrink-0 opacity-90">
             <Image
               src="/logo.png"
@@ -75,6 +75,7 @@ export default async function Home() {
               width={240}
               height={240}
               className="object-contain drop-shadow-2xl"
+              style={{ filter: 'brightness(0) invert(1) sepia(0.15)' }}
               priority
             />
           </div>
