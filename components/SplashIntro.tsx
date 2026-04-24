@@ -151,8 +151,8 @@ export default function SplashIntro({ brandName, logoSrc }: SplashIntroProps) {
           <Image
             src={logoSrc}
             alt={brandName}
-            width={160}
-            height={160}
+            width={260}
+            height={260}
             className="object-contain drop-shadow-2xl"
             priority
           />
