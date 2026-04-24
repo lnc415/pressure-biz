@@ -30,7 +30,7 @@ export default function ServiceCard({ service, tipIndex = 0 }: ServiceCardProps)
   const tip = TIP_HEX[tipKey]
 
   return (
-    <div className="pressure-card bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex flex-col">
+    <div className="pressure-card bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex flex-col h-full">
       {/* Tip header bar */}
       <div
         className="flex items-center gap-2 px-4 py-2"
@@ -59,7 +59,7 @@ export default function ServiceCard({ service, tipIndex = 0 }: ServiceCardProps)
         )}
         <Link
           href={`/quote?service=${encodeURIComponent(service.name)}`}
-          className="tip-btn tip-red mt-auto self-start text-sm"
+          className={`tip-btn tip-${tipKey} mt-auto self-start text-sm`}
         >
           <span className="tip-badge" />
           Quote This
