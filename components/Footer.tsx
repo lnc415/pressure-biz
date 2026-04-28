@@ -38,7 +38,23 @@ export default function Footer({ brandName, phone, email1 }: FooterProps) {
           <div className="flex flex-col gap-2 text-sm">
             <a href={`tel:${phone}`} className="text-[#F5F0E8]/70 hover:text-[#F5F0E8] transition-colors">{phone}</a>
             <a href={`mailto:${email1}`} className="text-[#F5F0E8]/70 hover:text-[#F5F0E8] transition-colors">{email1}</a>
-            <Link href="/quote" className="text-[#9B7A2F] hover:text-[#F5F0E8] transition-colors mt-1">Request a Quote →</Link>
+            <div className="mt-1 text-[#F5F0E8]/50 text-xs leading-relaxed">
+              <p className="font-semibold text-[#F5F0E8]/60 mb-0.5">Hours</p>
+              <p>Mon – Sat &nbsp;9 am – 5 pm</p>
+              <p>Sunday &nbsp;Closed</p>
+            </div>
+            <a
+              href="https://www.google.com/search?q=Mist+and+Main&stick=H4sIAAAAAAAA_-NgU1I1qEhMMUkyTLFITko1STZNTkmzMqgwSzY3NzaxSE40MTZMNElLXMTK65tZXKKQmJei4JuYmQcAahxewDkAAAA&hl=en&mat=CVzp3z-PSbJwElYBTVDHnqCH1k4Cii9SDPbLooBk3kK7gH9h5-7Ku-LvSmb_Ow-eOqrIig7tk3qt2uhMittlVThmbtuSDVNZE4CpHDl3oDMfzAgfDp_jpT2a5-94QUEHgA&authuser=0&ved=2ahUKEwinmZ-gh5GUAxUl6ckDHdUICi4Q-MgIegQIFhAe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[#9B7A2F] hover:text-[#F5F0E8] transition-colors mt-1"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              Google Business Profile
+            </a>
+            <Link href="/quote" className="text-[#9B7A2F] hover:text-[#F5F0E8] transition-colors">Request a Quote →</Link>
           </div>
         </div>
 
