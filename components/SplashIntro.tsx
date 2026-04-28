@@ -154,7 +154,7 @@ export default function SplashIntro({ brandName, logoSrc }: SplashIntroProps) {
             width={260}
             height={260}
             className="object-contain drop-shadow-2xl"
-            style={{ maxHeight: 'min(260px, 38vh)', width: 'auto', height: 'auto' }}
+            style={{ maxHeight: 'min(312px, 46vh)', width: 'auto', height: 'auto' }}
             priority
           />
         </div>
