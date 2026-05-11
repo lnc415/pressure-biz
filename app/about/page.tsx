@@ -97,31 +97,30 @@ export default async function AboutPage() {
             </p>
           </FadeUp>
 
-          {/* Team grid — wired for photos */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+          {/* Team */}
+          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-14">
             {[
-              { name: 'Coming Soon', role: 'Lead Tech', note: 'Photo coming soon' },
-              { name: 'Coming Soon', role: 'Soft-Wash Specialist', note: 'Photo coming soon' },
-              { name: 'Coming Soon', role: 'Surface Restoration', note: 'Photo coming soon' },
+              {
+                name: 'Heather Campbell',
+                role: 'Owner & Lead Technician',
+                bio: 'Heather founded Mist and Main with a simple standard: treat every property the way you\'d want yours treated. She leads every job personally and holds the crew to the same level of care that Jonesborough\'s historic homes deserve.',
+              },
+              {
+                name: 'Cadence Campbell',
+                role: 'Crew Specialist',
+                bio: 'Cadence brings the same dedication to every surface she touches. Whether it\'s a century-old brick facade or a freshly poured driveway, she takes the time to do it right.',
+              },
             ].map((member, i) => (
               <FadeUp key={i}>
-                <div className="border border-[#F5F0E8]/10 rounded overflow-hidden">
-                  {/* Photo placeholder */}
-                  <div
-                    className="aspect-[4/3] flex items-center justify-center"
-                    style={{ background: 'rgba(245,240,232,0.05)' }}
+                <div className="border border-[#F5F0E8]/10 p-7">
+                  <p
+                    className="text-[#F5F0E8] mb-1"
+                    style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: '1.2rem' }}
                   >
-                    <span className="text-[#F5F0E8]/20 text-5xl">📸</span>
-                  </div>
-                  <div className="p-4">
-                    <p
-                      className="text-[#F5F0E8]"
-                      style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: '1.1rem' }}
-                    >
-                      {member.name}
-                    </p>
-                    <p className="text-[#9B7A2F] text-xs tracking-wider uppercase mt-0.5">{member.role}</p>
-                  </div>
+                    {member.name}
+                  </p>
+                  <p className="text-[#9B7A2F] text-xs tracking-wider uppercase mb-4">{member.role}</p>
+                  <p className="text-[#F5F0E8]/55 text-sm leading-relaxed">{member.bio}</p>
                 </div>
               </FadeUp>
             ))}

@@ -20,7 +20,7 @@ export async function sendEmail(opts: {
     return
   }
   await resend.emails.send({
-    from: 'Mist and Main <noreply@mistandmain.com>',
+    from: 'Mist and Main <onboarding@resend.dev>',
     ...opts,
   })
 }
