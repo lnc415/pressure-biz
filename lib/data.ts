@@ -24,7 +24,8 @@ export async function readData<T>(name: string): Promise<T[]> {
   const redis = await getRedis()
   if (redis) {
     const val = await redis.get<T[]>(`cs:${name}`)
-    return val ?? []
+    if (val !== null) return val
+    // Redis connected but key not yet seeded — fall back to JSON file
   }
   try {
     return JSON.parse(fs.readFileSync(filePath(name), 'utf-8'))
@@ -46,7 +47,8 @@ export async function readOne<T>(name: string, fallback: T): Promise<T> {
   const redis = await getRedis()
   if (redis) {
     const val = await redis.get<T>(`cs:${name}`)
-    return val ?? fallback
+    if (val !== null) return val
+    // Redis connected but key not yet seeded — fall back to JSON file
   }
   try {
     return JSON.parse(fs.readFileSync(filePath(name), 'utf-8'))

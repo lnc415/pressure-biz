@@ -25,9 +25,9 @@ const DEFAULT_BRAND: Brand = {
     'All-crew professionals — no day laborers',
     'Satisfaction guaranteed on every job',
   ],
-  email1: 'hello@mistandmain.com',
+  email1: 'mistandmain@gmail.com',
   email2: '',
-  phone: '(423) 000-0000',
+  phone: '(423) 444-9536',
 }
 
 export async function getBrand(): Promise<Brand> {
