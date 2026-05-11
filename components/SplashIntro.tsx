@@ -64,7 +64,11 @@ export default function SplashIntro({ brandName, logoSrc }: SplashIntroProps) {
   const particles = useRef<MistParticle[]>([])
   const emitting  = useRef(true)
 
-  useEffect(() => { setVisible(true) }, [])
+  useEffect(() => {
+    if (sessionStorage.getItem('mm_splash_seen')) return
+    sessionStorage.setItem('mm_splash_seen', '1')
+    setVisible(true)
+  }, [])
 
   useEffect(() => {
     if (!visible) return

@@ -60,6 +60,8 @@ export async function POST(request: Request) {
 
     const brand = await getBrand()
     const adminUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/admin`
+
+    // Notify business
     await sendEmail({
       to: [brand.email1, brand.email2].filter(Boolean),
       subject: `New Quote Request from ${name}`,
@@ -72,6 +74,18 @@ export async function POST(request: Request) {
 <p><strong>Details:</strong> ${details || 'None'}</p>
 <p><strong>Photos:</strong> ${photoUrls.length}</p>
 <p><a href="${adminUrl}">View in Admin Panel</a></p>`,
+    })
+
+    // Confirm receipt to customer
+    await sendEmail({
+      to: [email],
+      subject: `We received your quote request — Mist and Main`,
+      html: `<p>Hi ${name},</p>
+<p>Thanks for reaching out to Mist and Main! We've received your request for <strong>${service}</strong> at ${address} and will be in touch within 24 hours.</p>
+<p>If you have any questions in the meantime, reply to this email or call us at <strong>${brand.phone}</strong>.</p>
+<br/>
+<p>— Heather & the Mist and Main crew</p>
+<p style="color:#666;font-size:12px;">Jonesborough, Tennessee · mistandmain.com</p>`,
     })
 
     return Response.json({ ok: true })
